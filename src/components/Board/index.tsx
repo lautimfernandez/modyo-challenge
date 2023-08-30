@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import Card from "../Card";
 import { CardType } from "@/types/general";
 import { getImages } from "@/api";
@@ -45,35 +45,38 @@ export default function Board({ onFinishGame }: PropsWithChildren<BoardProps>) {
     }
   }, [data?.entries?.length, matchedPairs.length, onFinishGame]);
 
-  const handleCardClick = (clickedCard: CardType) => {
-    if (flippedCards.length === 2 || clickedCard.isFlipped) {
-      return;
-    }
-    const updatedCards = cards.map((card) =>
-      card.id === clickedCard.id ? { ...card, isFlipped: true } : card
-    );
-
-    setCards(updatedCards);
-    setFlippedCards([...flippedCards, clickedCard]);
-
-    if (flippedCards.length === 1) {
-      if (flippedCards[0].name === clickedCard.name) {
-        setMatchedPairs([...matchedPairs, clickedCard.name]);
-        setFlippedCards([]);
-      } else {
-        setErrors(errors + 1);
-        setTimeout(() => {
-          const resetCards = cards.map((card) =>
-            flippedCards.some((flipped) => flipped.id === card.id)
-              ? { ...card, isFlipped: false }
-              : card
-          );
-          setCards(resetCards);
-          setFlippedCards([]);
-        }, 500);
+  const handleCardClick = useCallback(
+    (clickedCard: CardType) => {
+      if (flippedCards.length === 2 || clickedCard.isFlipped) {
+        return;
       }
-    }
-  };
+      const updatedCards = cards.map((card) =>
+        card.id === clickedCard.id ? { ...card, isFlipped: true } : card
+      );
+
+      setCards(updatedCards);
+      setFlippedCards([...flippedCards, clickedCard]);
+
+      if (flippedCards.length === 1) {
+        if (flippedCards[0].name === clickedCard.name) {
+          setMatchedPairs([...matchedPairs, clickedCard.name]);
+          setFlippedCards([]);
+        } else {
+          setErrors(errors + 1);
+          setTimeout(() => {
+            const resetCards = cards.map((card) =>
+              flippedCards.some((flipped) => flipped.id === card.id)
+                ? { ...card, isFlipped: false }
+                : card
+            );
+            setCards(resetCards);
+            setFlippedCards([]);
+          }, 500);
+        }
+      }
+    },
+    [cards, errors, flippedCards, matchedPairs]
+  );
 
   return (
     <div className="flex flex-col w-full items-center mt-4">

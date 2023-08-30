@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Card from "../Card";
 import { CardType } from "@/types/general";
 import { getImages } from "@/api";

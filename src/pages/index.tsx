@@ -1,16 +1,18 @@
+import { useState } from "react";
 import dynamic from "next/dynamic";
+import { Inter } from "next/font/google";
+import { useRouter } from "next/router";
+import useLocalStorage from "@/hooks/useLocalStorage";
 import Board from "@/components/Board";
-import NameModal from "@/components/NameModal";
+const NameModal = dynamic(() => import("@/components/NameModal"), {
+  ssr: false,
+});
 const SuccessModal = dynamic(() => import("@/components/SuccessModal"), {
   ssr: false,
 });
 const Header = dynamic(() => import("@/components/Header"), {
   ssr: false,
 });
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { Inter } from "next/font/google";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,18 +20,12 @@ export default function Home() {
   const router = useRouter();
 
   const [user, setUser] = useLocalStorage("user", "");
-  const [isNameModalOpen, setIsNameModalOpen] = useState(false);
+  const [isNameModalOpen, setIsNameModalOpen] = useState(user ? false : true);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   type FormValues = {
     name: string;
   };
-
-  useEffect(() => {
-    if (!user) {
-      setIsNameModalOpen(true);
-    }
-  }, []);
 
   const onSubmit = (data: FormValues) => {
     setUser(data.name);

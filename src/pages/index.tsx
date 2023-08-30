@@ -46,7 +46,7 @@ export default function Home() {
       className={`flex min-h-screen flex-col items-center justify-center p-10 ${inter.className}`}
     >
       <Header user={user} handleResetUser={handleResetUser} />
-      <Board onSuccess={handleToggleSuccesModal} />
+      <Board onFinishGame={handleToggleSuccesModal} />
       <NameModal onSubmit={onSubmit} isOpen={isNameModalOpen} />
       <SuccessModal user={user} isOpen={isSuccessModalOpen} />
     </main>

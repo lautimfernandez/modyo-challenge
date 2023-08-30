@@ -19,10 +19,10 @@ export async function getStaticProps() {
 }
 
 interface BoardProps {
-  onSuccess: () => void;
+  onFinishGame: () => void;
 }
 
-export default function Board({ onSuccess }: PropsWithChildren<BoardProps>) {
+export default function Board({ onFinishGame }: PropsWithChildren<BoardProps>) {
   const { data, isSuccess, isLoading } = useQuery({
     queryKey: ["images"],
     queryFn: getImages,
@@ -41,9 +41,9 @@ export default function Board({ onSuccess }: PropsWithChildren<BoardProps>) {
 
   useEffect(() => {
     if (matchedPairs.length === data?.entries?.length) {
-      onSuccess();
+      onFinishGame();
     }
-  }, [data?.entries?.length, matchedPairs.length, onSuccess]);
+  }, [data?.entries?.length, matchedPairs.length, onFinishGame]);
 
   const handleCardClick = (clickedCard: CardType) => {
     if (flippedCards.length === 2 || clickedCard.isFlipped) {
